@@ -1,0 +1,33 @@
+<div class="flex flex-col drop-shadow-md shadow-md md:flex-row w-full max-w-3xl justify-center items-center">
+    <div class="md:w-1/2 bg-gray-100 px-8 py-6 mb-4 md:mb-0">
+      <img src="assets/image/chat_app.jpg" alt="Chat App" class="w-full mb-4">
+      <p class="text-lg font-medium mb-4">Welcome to the Chat App!</p>
+      <p>Connect with friends, family, and colleagues in real-time. Share messages, photos, and videos in a secure and private environment.</p>
+    </div>
+    <div class="md:w-1/2 rounded px-8 pt-6 pb-8 mb-4 md:ml-4">
+      <h2 class="text-xl font-semibold mb-4">Login to your account</h2>
+      <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+       
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                 id="email" name="email" type="email" [(ngModel)]="formData.email" required>
+        </div>
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password</label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                 id="password" name="password" type="text" [(ngModel)]="formData.password" required>
+        </div>
+        <div class="flex items-center justify-end">
+          <button type="submit" [disabled]="registerForm.invalid" class="bg-[#77d5c3] hover:bg-[#49a796] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</button>
+        </div>
+        <div class="mt-6">
+            <span>Don't have an account? <a class="text-[#77d5c3] hover:text-[#30796c]" routerLink="/auth/register">Register</a></span>
+        </div>
+        <div class="mt-6">
+            <a class="text-[#77d5c3] hover:text-[#30796c]" routerLink="/auth/forgot-password">Forgot password?</a>
+        </div>
+      </form>
+    </div>
+  </div>
+  
