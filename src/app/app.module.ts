@@ -13,6 +13,11 @@ import { RegisterComponent } from './components/user-auth/register/register.comp
 import { AppRoutingModule } from './app.routes';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { ToastrModule } from 'ngx-toastr';
+import { UserService } from './service/user.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 // import { appConfig } from './app.config';
 
 
@@ -24,21 +29,25 @@ import { FormsModule } from '@angular/forms';
     ForgotPasswordComponent,
     ResetPasswordComponent,
     RegisterComponent,
+    ChatPageComponent
     // ChatPageComponent
   ],
   imports: [
     CommonModule,
-    UserAuthRoutingModule,
+    // UserAuthRoutingModule,
     AppRoutingModule,
     RouterOutlet,
     CommonModule,
     RouterModule,
     BrowserModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
   
   
   ],
-  providers: [AuthService, ChatService],
+  providers: [AuthService, ChatService,UserService],
   bootstrap: [AppComponent]
 })
   

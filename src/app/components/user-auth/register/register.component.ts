@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { UserService } from '../../../service';
+
+
 
 @Component({
   selector: 'app-register',
@@ -7,7 +11,7 @@ import { Component } from '@angular/core';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
 
   formData = {
     name: '',
@@ -15,13 +19,36 @@ export class RegisterComponent {
     password: ''
   };
 
-  showError:boolean = false;
+  showError: boolean = false;
 
-  onSubmit(f:any):void {
+  constructor(private toastr: ToastrService,
+    private _userService: UserService
+  ) { }
+
+  ngOnInit(): void {
+    // this.toastr.success('Registration page opened')
+  }
+  onSubmit(valid: any): void {
     this.showError = true;
-    if (f.valid) {
-      
+    if (valid) {
+      // this.toastr.success('Registered in successfully')
       console.log('Form submitted:', this.formData);
+      this._userService.register(this.formData).subscribe(
+        (res) => {
+          if (res.code == 200) {
+            this.toastr.success(res.message);
+            console.log(res);
+          }
+          else {
+            this.toastr.error(res.message);
+          }
+        }
+        ,
+        (err) => {
+          console.log(err);
+          this.toastr.error(err);
+        }
+      )
     }
     else {
       console.log("form not submitted:", this.formData);

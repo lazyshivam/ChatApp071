@@ -10,7 +10,7 @@ import { map, catchError, tap, retry } from 'rxjs/operators';
 import { environment } from '../../environment/environment';
 
 @Injectable()
-export class AdminService {
+export class UserService {
     constructor(private http: HttpClient) { }
 
     apiUrl: any = environment.apiUrl;
@@ -24,38 +24,38 @@ export class AdminService {
     //   register
 
     register(request: any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/auth/register`, request).pipe(map(this.extractData));
+        return this.http.post(`${this.apiUrl}/user/auth/register`, request).pipe(map(this.extractData));
     }
     // Login
     login(request: any): Observable<any> {
         return this.http
-            .post(`${this.apiUrl}/auth/login`, request)
+            .post(`${this.apiUrl}/user/auth/login`, request)
             .pipe(map(this.extractData));
     }
     // logOut
     logOut(request: any): Observable<any> {
         return this.http
-            .post(`${this.apiUrl}/auth/logout`, request)
+            .post(`${this.apiUrl}/user/auth/logout`, request)
             .pipe(map(this.extractData));
     }
     // update user info
     updateUserInfo(id: any, request: any): Observable<any> {
         return this.http
-            .patch(`${this.apiUrl}/auth/subadmin/profile/` + id, request)
+            .patch(`${this.apiUrl}user/auth/profile/` + id, request)
             .pipe(map(this.extractData));
     }
 
     // forget Password
     forgotPassword(data: any): Observable<any> {
         return this.http
-            .post(`${this.apiUrl}/auth/forgot-password`, data)
+            .post(`${this.apiUrl}/user/auth/forgot-password`, data)
             .pipe(map(this.extractData));
     }
 
     // Reset Password
     resetPassword(token: any, body: any) {
         return this.http.post(
-            this.apiUrl + '/auth/reset-password?token=' + token,
+            this.apiUrl + '/user/auth/reset-password?token=' + token,
             body
         );
     }

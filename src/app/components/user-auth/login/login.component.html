@@ -6,20 +6,30 @@
     </div>
     <div class="md:w-1/2 rounded px-8 pt-6 pb-8 mb-4 md:ml-4">
       <h2 class="text-xl font-semibold mb-4">Login to your account</h2>
-      <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+      <form (ngSubmit)="onSubmit(f.form.valid)" #f="ngForm">
        
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
           <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                 id="email" name="email" type="email" [(ngModel)]="formData.email" required>
+                 id="email" #email="ngModel" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" name="email" type="email" [(ngModel)]="formData.email" required>
+
+                 <small *ngIf="email.invalid && showError">
+                  <small class="text-sm text-red-500" *ngIf="email.errors?.['required']">Email is required</small>
+                  <small class="text-sm text-red-500" *ngIf="email.errors?.['pattern']">Please enter a valid
+                      email</small>
+
+              </small>
         </div>
         <div class="mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password</label>
           <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                 id="password" name="password" type="text" [(ngModel)]="formData.password" required>
+                 id="password" #password="ngModel" name="password" type="text" [(ngModel)]="formData.password" required>
+                 <small *ngIf="password.invalid && showError">
+                  <small class="text-sm text-red-500" *ngIf="password.errors?.['required']">Password is required</small>
+              </small>
         </div>
         <div class="flex items-center justify-end">
-          <button type="submit" [disabled]="registerForm.invalid" class="bg-[#77d5c3] hover:bg-[#49a796] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</button>
+          <button type="submit" [disabled]="f.invalid" class="bg-[#77d5c3] hover:bg-[#49a796] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</button>
         </div>
         <div class="mt-6">
             <span>Don't have an account? <a class="text-[#77d5c3] hover:text-[#30796c]" routerLink="/auth/register">Register</a></span>
