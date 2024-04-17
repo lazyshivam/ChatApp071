@@ -17,7 +17,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ToastrModule } from 'ngx-toastr';
 import { UserService } from './service/user.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './helpers/auth.interceptor';
+// import { AuthInterceptor } from './service/auth.interceptor';
 // import { appConfig } from './app.config';
 
 
@@ -47,7 +49,16 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   
   
   ],
-  providers: [AuthService, ChatService,UserService],
+  providers: [
+    AuthService,
+    ChatService,
+    UserService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
   

@@ -4,12 +4,8 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { ChatService } from '../../service/chat.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service';
+import { ToastrService } from 'ngx-toastr';
 
-interface Friend {
-  name: string;
-  avatar: string;
-  status: string;
-}
 @Component({
   selector: 'app-chat-page',
   // standalone: true,
@@ -20,25 +16,19 @@ interface Friend {
 export class ChatPageComponent implements OnInit  {
   userName: string = "Shivam Goswami";
   newMessage: string = '';
+  userList: any = [];
   messages: any[] = [
-    {userId:0, senderId: 'Friend1', content: 'Hello there!' },
-    {userId:1, senderId: 'YourUserName', content: 'Hi! How are you?' },
-    {userId:0, senderId: 'Friend1', content: 'I\'m good, thanks! How about you?' }
-    // Add more messages as needed
+   
   ];
   showDropdown: boolean = false;
-  friends: Friend[] = [
-    { name: 'Friend 1', avatar: 'https://picsum.photos/200/200', status: 'Online' },
-    { name: 'Friend 2', avatar: 'https://picsum.photos/200/200', status: 'Away' },
-    { name: 'Friend 3', avatar: 'https://picsum.photos/200/200', status: 'Offline' }
-    // Add more friends as needed
-  ];
- 
+  
   userDetails: any = {};
+  senderDetails:any = {};
   constructor(
     private chatService: ChatService,
     private _router: Router,
-    private _authService:AuthService
+    private _authService: AuthService,
+    private _toastr:ToastrService
     
 
   ) {}
@@ -53,12 +43,16 @@ export class ChatPageComponent implements OnInit  {
       this.userDetails = this._authService.getUserData();
     }
     console.log(this.userDetails);
+    this.getUserMessage(this.userDetails._id);
+    this.getAllUsers();
   }
 
   
 
-  switchConversation(friend: Friend) {
+  switchConversation(friend: any) {
     // Implement logic to switch conversation page with the selected friend
+    this.getUserMessage(friend._id);
+    this.senderDetails = friend;
     console.log('Switching conversation with:', friend.name);
   }
   
@@ -68,14 +62,64 @@ export class ChatPageComponent implements OnInit  {
 
   logout() {
     // Implement logout functionality here
+    console.log("Logout clicked");
+    this._toastr.success('Logged out successfully')
+    this._authService.userLogout();
+    this._router.navigate(['auth/login'])
+  
   }
   sendMsg() {
     if (this.newMessage.trim() !== '') {
-      this.messages.push({userId:this.userDetails._id, senderId: this.userDetails._id, content: this.newMessage });
-      this.chatService.sendMessage({userId:this.userDetails._id, senderId:this.userDetails._id, content:this.newMessage})
+      // this.messages.push({userId:this.userDetails._id, senderId: this.senderDetails._id, content: this.newMessage });
+      this.chatService.sendMessage({userId:this.userDetails._id, senderId:this.senderDetails._id, content:this.newMessage})
       // Optionally, you can add code here to send the message to your backend or another user
       this.newMessage = '';
     }
- }
+  }
+  
+  getUserMessage(senderId:any) {
+    this.chatService.getUserMessageById(senderId).subscribe(
+      res => {
+        if (res.code === 200) {
+          console.log(res.data);
+          this.messages = res.data;
+        } else if(res.code===401) {
+          this._router.navigate(['auth/login']);
+          this._authService.userLogout();
+        }
+        else {
+          console.log(res.message);
+        }
+      },
+      err => {
+        console.log(err);
+        this._router.navigate(['auth/login']);
+        this._authService.userLogout();
+      }
+    )
+  }
+
+  getAllUsers() {
+    this.chatService.getAllUser().subscribe(
+      res => {
+        if (res.code === 200) {
+          console.log(res.data);
+          this.userList = res.data;
+        } else if(res.code===401) {
+          this._router.navigate(['/login']);
+          this._authService.userLogout();
+        }
+        else {
+          console.log(res.message);
+        }
+        console.log(res)
+      },
+      err => {
+        console.log(err);
+        this._router.navigate(['auth/login']);
+        this._authService.userLogout();
+      }
+    )
+  }
 
 }

@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit{
           if (res.code === 200) {
             console.log(res);
             this.toastr.success('Logged in successfully');
+            this._router.navigate(['/home']);
             this._authService.setDataUser(res.data.user);
             this._authService.setTokenUser(res.data.tokens.access.token);
           }
